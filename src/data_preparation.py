@@ -1,6 +1,10 @@
 from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objs as go
+import plotly.io as pio
+from PIL import Image
+import numpy as np
 
 def create_dataframe(csv_file):
     df = pd.read_csv(csv_file)
@@ -39,16 +43,58 @@ def processing(df):
     present = df['Present_Percentage'] = (df['Present'] / df['Enrolled']) * 100
     #df.set_index('Date', inplace=True)
     
+    """fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=df['Date'][:7],
+        y=absent[:7],
+        name='cycle_spaces'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Date'][:7],
+        y=present[:7],
+        name='car_spaces',
+        #marker=dict(color=['teal','cyan'])
+    ))
+    print (present[:7])
+    fig.update_layout(title='How does car parking spaces compare to cycle spaces for different Higher Education Providers?',
+        #template="simple_white",
+        barmode= 'group',height = 800,paper_bgcolor='#FFFFFF')
+    fig.update_traces(marker_line_width=0.01)
+    fig.update_xaxes(ticklen=0,tickfont=dict(size=16,color='teal'))
+    #fig.show()
+    #pio.show(fig, render='png')
+    img_bytes = pio.to_image(fig, format='png')
+
+# Convert bytes to an image object
+    image = Image.open(pio.BytesIO(img_bytes))
+
+# Display the image
+    image.show()
+    return fig"""
+    dates = df['Date'][:7]
+    
+    #bar_width = 1.35  # Adjust width for better separation
+
+# Create x-axis positions for each bar group
+    #x = np.arange(len(dates))
+    
     plt.figure(figsize=(14, 7))
-    plt.bar(df['Date'], present, label='Enrolled', alpha=0.7)
-    plt.bar(df['Date'], absent, label='Absent', alpha=0.7)
+    plt.bar(dates, present[:7], label='Enrolled', alpha=0.7)
+    plt.bar(dates, absent[:7], label='Absent', alpha=0.7)
     plt.show()
 
     """df[['Absent_Percentage', 'Present_Percentage']].plot(figsize=(14, 7))
     plt.title('Percentage of Absentees and Present Students')
     plt.ylabel('Percentage')
     plt.show()
+    
+    df.set_index('Date', inplace=True)
+    df[['Enrolled']].plot(figsize=(14, 7))
+    plt.title('Daily Attendance Trends')
+    plt.ylabel('Number of Students')
+    plt.show()
     """
+
     
 if __name__ == '__main__':
     # Use Pathlib.Path to read a file using the location relative to this file
